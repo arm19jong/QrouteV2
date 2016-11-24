@@ -54,6 +54,7 @@ public class RecentActivity extends AppCompatActivity {
 
 
     private List<CenteridValue> mDataSet;
+    private List<String> mMobileID;
     SharedPreferences prefs = null;
     private FloatingActionButton fabAdd;
     View decorView;
@@ -85,6 +86,7 @@ public class RecentActivity extends AppCompatActivity {
         });
 
         mDataSet= new ArrayList<>();
+        mMobileID=new ArrayList<>();
         try {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
@@ -162,6 +164,7 @@ public class RecentActivity extends AppCompatActivity {
             // using the following line to edit/commit prefs
             prefs.edit().putBoolean("firstrun", false).commit();
             String MID = new GenUID().genMID();
+
             prefs.edit().putString("MID", MID).commit();
         }
 
@@ -191,9 +194,10 @@ public class RecentActivity extends AppCompatActivity {
 
                                 if ((dataSnapshot3.getKey()).equals(midClass.getCid())) {
                                     CenteridValue centeridValue = dataSnapshot3.getValue(CenteridValue.class);
-                                    //Toast.makeText(RecentActivity.this, dataSnapshot1.getKey(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(RecentActivity.this, dataSnapshot1.getKey(), Toast.LENGTH_SHORT).show();
                                     //Toast.makeText(RecentActivity.this, "" + dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
                                     //mChats.add(model);
+                                    mMobileID.add(dataSnapshot1.getKey());
                                     mDataSet.add(centeridValue);
                                     mRecyclerView.scrollToPosition(mDataSet.size() - 1);
                                     mAdapter.notifyItemInserted(mDataSet.size() - 1);
@@ -273,9 +277,10 @@ public class RecentActivity extends AppCompatActivity {
 
         //ArrayList<String> email = new ArrayList<String>();
 
-        mAdapter = new RecentCustomAdapter(RecentActivity.this, mDataSet);
-        new RecentCustomAdapter(RecentActivity.this, mDataSet).clearData();
-        mAdapter = new RecentCustomAdapter(RecentActivity.this, mDataSet);
+        String m = prefs.getString("MID", "");
+        mAdapter = new RecentCustomAdapter(RecentActivity.this, mDataSet, mMobileID, m);
+        new RecentCustomAdapter(RecentActivity.this, mDataSet, mMobileID, m).clearData();
+        mAdapter = new RecentCustomAdapter(RecentActivity.this, mDataSet, mMobileID, m);
 
         ((RecentCustomAdapter) mAdapter).setMode(Attributes.Mode.Single);
         mRecyclerView.setAdapter(mAdapter);

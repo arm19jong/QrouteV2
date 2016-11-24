@@ -17,12 +17,18 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.FormatException;
@@ -32,8 +38,13 @@ import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.teamsmokeweed.qroute.Content;
 import com.teamsmokeweed.qroute.R;
+import com.teamsmokeweed.qroute.firebase.CenteridValue;
 import com.teamsmokeweed.qroute.firebase.SaveToMobileID;
+
+import java.util.Arrays;
+import java.util.List;
 
 import me.dm7.barcodescanner.core.IViewFinder;
 import me.dm7.barcodescanner.core.ViewFinderView;
@@ -50,6 +61,9 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
     //private DateQr dateQr;
     private static int RESULT_LOAD_IMAGE = 1;
     SharedPreferences prefs = null;
+    private DatabaseReference mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseInstance;
+    CenteridValue centeridValue;
 
     @Override
     public void onCreate(Bundle state) {
@@ -103,6 +117,8 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
         }};
         contentFrame.addView(mScannerView);
 
+        mFirebaseInstance = FirebaseDatabase.getInstance();
+
 
     }
 
@@ -119,11 +135,12 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
         super.onPause();
         mScannerView.stopCamera();
     }
-
+    List<String> sqr = null;
+    String[] sqrr = null;
     @Override
-    public void handleResult(Result rawResult) {
-        Toast.makeText(this, "Contents = " + rawResult.getText() +
-                ", Format = " + rawResult.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
+    public void handleResult(final Result rawResult) {
+//        Toast.makeText(this, "Contents = " + rawResult.getText() +
+//                ", Format = " + rawResult.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
 
 
 //        Toast.makeText(ReadActivity.this, rawResult.getText(), Toast.LENGTH_SHORT).show();
@@ -149,16 +166,93 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
         String MID = prefs.getString("MID", "-null");
 
         new SaveToMobileID(rawResult.getText(), MID);
-        try{
-            //new SaveToMobileID(rawResult.getText());
+
+
+
+//        try{
+
+
+
+//            //new SaveToMobileID(rawResult.getText());
+//
+
+
+
+//        }
+//        catch (Exception e){
+//
+
+//        }
+
+        mFirebaseDatabase = mFirebaseInstance.getReference("centerid");
+        mFirebaseDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+
+                //Log.d("sassssssssssssss", dataSnapshot.get.toString()+"//sss");
+//                Toast.makeText(ReadActivity.this, dataSnapshot.getKey()+"//"+rawResult.getText(), Toast.LENGTH_SHORT).show();
+                if(dataSnapshot.getKey().equals(rawResult.getText())){
+                    Toast.makeText(ReadActivity.this, dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
+                    centeridValue = dataSnapshot.getValue(CenteridValue.class);
+
+                    sqr = Arrays.asList(
+                            centeridValue.getLat().toString(),
+                            centeridValue.getLng().toString(),
+                            centeridValue.getTitles(),
+                            centeridValue.getPlaceName(),
+                            centeridValue.getPlaceType(),
+                            centeridValue.getDes(),
+                            centeridValue.getWeb(),
+                            centeridValue.getPic(),
+                            centeridValue.getStart_date(),
+                            centeridValue.getStart_time(),
+                            centeridValue.getEnd_date(),
+                            centeridValue.getEnd_time()
+                    );
+                    sqrr = (String[]) sqr.toArray(new String[sqr.size()]);
+                    Intent intent = new Intent(ReadActivity.this, Content.class);
+                    //String[] sqr = sqr;
+                    //ArrayList<String> sqrr = new ArrayList<String>(sqr);
+
+                    intent.putExtra("sQr", sqrr);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //String[] parts = rawResult.getText().split(":");
+        //String part1 = parts[1]; // 004
+
+        try {
 
         }
         catch (Exception e){
 
         }
 
-        //String[] parts = rawResult.getText().split(":");
-        //String part1 = parts[1]; // 004
+
 
 
 

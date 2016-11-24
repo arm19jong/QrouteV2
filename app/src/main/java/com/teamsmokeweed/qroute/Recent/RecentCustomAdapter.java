@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import com.teamsmokeweed.qroute.Content;
 import com.teamsmokeweed.qroute.R;
 import com.teamsmokeweed.qroute.firebase.CenteridValue;
+import com.teamsmokeweed.qroute.firebase.DellDatabase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +30,16 @@ import java.util.List;
 public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapter.ViewHolder> {
     Context context;
     private List<CenteridValue> mDataSet;
+    private List<String> mMobileID;
+    private String mid;
+
 
     public void clearData() {
         mDataSet.removeAll(mDataSet);
+//        for (String i:mMobileID){
+//            mMobileID.remove(i);
+//        }
+        mMobileID.clear();
         //mAdapter.notifyDataSetChanged();
         notifyDataSetChanged();
         //recyclerView.setAdapter(mAdapter);
@@ -44,6 +53,7 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
 //        TextView mTitle, mPlaceName, tvDel;
+        RelativeLayout tvDel;
         public SwipeLayout swipeLayout;
         public ImageView picView;
         public TextView titles;
@@ -54,7 +64,7 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
 //            mTitle = (TextView) v.findViewById(R.id.titles);
 //            mPlaceName = (TextView) v.findViewById(R.id.placeName);
             cardView = (CardView) v.findViewById(R.id.card_view);
-            //tvDel = (TextView) v.findViewById(R.id.tvDelete);
+            tvDel = (RelativeLayout) v.findViewById(R.id.Del);
             picView = (ImageView) v.findViewById(R.id.picView);
             titles = (TextView) v.findViewById(R.id.titles);
             itemView.setTag(itemView);
@@ -63,9 +73,11 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
 
     }
 
-    public RecentCustomAdapter(Context context, List<CenteridValue> mDataSet){
+    public RecentCustomAdapter(Context context, List<CenteridValue> mDataSet, List<String> mMobileID, String mid){
         this.context = context;
         this.mDataSet = mDataSet;
+        this.mMobileID = mMobileID;
+        this.mid = mid;
 
     }
 
@@ -84,6 +96,7 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final CenteridValue centeridValue = mDataSet.get(position);
+        final String mobileID = mMobileID.get(position);
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
         // Drag From Left
@@ -122,6 +135,18 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
                 .placeholder(R.drawable.ic_hourglass_empty_24dp)
                 .error(R.drawable.ic_hourglass_empty_24dp)
                 .into(viewHolder.picView);
+        viewHolder.tvDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(context, "click"+mobileID, Toast.LENGTH_SHORT).show();
+                new DellDatabase().del(mid, mobileID);
+                mDataSet.remove(position);
+                mMobileID.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, mDataSet.size());
+
+            }
+        });
 //        viewHolder.tvDel.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -158,6 +183,7 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
 //                Toast.makeText(context,"Removed : " + itemLabel,Toast.LENGTH_SHORT).show();
 //            }
 //        });
+
 
         mItemManger.bindView(viewHolder.itemView, position);
     }
