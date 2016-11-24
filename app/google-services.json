@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "875903413841",
+    "firebase_url": "https://qroutedb.firebaseio.com",
+    "project_id": "qroutedb",
+    "storage_bucket": "qroutedb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875903413841:android:f329a6aa6575f517",
+        "android_client_info": {
+          "package_name": "com.teamsmokeweed.qroute"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875903413841-uub0hg1ff7jrck69md2bomc0907jr6fd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_ufVGVy3ZkXZiF-3DEc-o5Uy9unHxs8g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
