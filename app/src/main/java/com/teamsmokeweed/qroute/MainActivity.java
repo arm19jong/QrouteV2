@@ -78,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //mRecyclerView.addOnItemTouchListener(
-        try {
-            checkTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            checkTime();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
     Toast m_currentToast;

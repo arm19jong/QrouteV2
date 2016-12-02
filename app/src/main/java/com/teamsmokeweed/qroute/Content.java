@@ -1,6 +1,5 @@
 package com.teamsmokeweed.qroute;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -20,7 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -29,7 +31,7 @@ import java.util.Locale;
 
 public class Content extends AppCompatActivity {
     ImageView imageView;
-    TextView textView, des, web, titles;
+    TextView textView, des, web, titles, timeOut, startStop;
     View decorView;
     String[] sQr;
     @Override
@@ -70,6 +72,8 @@ public class Content extends AppCompatActivity {
         des = (TextView) findViewById(R.id.des);
         web = (TextView) findViewById(R.id.web);
         titles = (TextView) findViewById(R.id.titles);
+        startStop = (TextView) findViewById(R.id.startStop);
+
 
 
         imageView = (ImageView) findViewById(R.id.image_id);
@@ -87,6 +91,27 @@ public class Content extends AppCompatActivity {
         des.setText(sQr[5]);
         web.setText(sQr[6]);
         titles.setText(sQr[2]);
+        try {
+            startStop.setText(startStop(sQr[8]+" "+sQr[9], sQr[10]+" "+sQr[11]));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            String ss = checkTime(sQr[10]+ " "+ sQr[11], getCurrentTimeStamp());
+            final Dialog dialog = new Dialog(Content.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_show_date);
+            dialog.setCancelable(true);
+            timeOut = (TextView) dialog.findViewById(R.id.timeOut);
+
+            timeOut.setText(ss);
+
+            dialog.show();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,6 +167,96 @@ public class Content extends AppCompatActivity {
 
 
 
+    }
+    public String getCurrentTimeStamp() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+    }
+
+    public String startStop(String start, String stop) throws ParseException {
+        Calendar startTime = Calendar.getInstance();
+        Calendar stopTime = Calendar.getInstance();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        startTime.setTime(sdf.parse(start));// all done
+        stopTime.setTime(sdf.parse(stop));
+        //Date Dcurrent = currentTime.getTime();
+        //Date DendTime = endTime.getTime();
+
+
+        SimpleDateFormat myFormat = new SimpleDateFormat("EEEE dd MMMM yyyy, HH:mm");
+        String s = myFormat.format(startTime.getTime());
+        return myFormat.format(startTime.getTime())+"-\n"+myFormat.format(stopTime.getTime());
+    }
+    static String  checkTime(String sEndTime, String sCurrentTime) throws ParseException {
+        Calendar currentTime = Calendar.getInstance();
+        Calendar endTime = Calendar.getInstance();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        endTime.setTime(sdf.parse(sEndTime));// all done
+        currentTime.setTime(sdf.parse(sCurrentTime));
+        Date Dcurrent = currentTime.getTime();
+        Date DendTime = endTime.getTime();
+
+//        SimpleDateFormat year = new SimpleDateFormat("yyyy");
+//        SimpleDateFormat month = new SimpleDateFormat("MM");
+//        SimpleDateFormat day = new SimpleDateFormat("dd");
+//        SimpleDateFormat house = new SimpleDateFormat("HH");
+//        SimpleDateFormat minute = new SimpleDateFormat("mm");
+//
+//        String formattedDate = year.format(currentTime.getTime());
+////        Date dataNow = new Date();
+////        Date data = new Date();
+////        data.setDate(8);
+////        data.setMonth(11);
+////        data.setYear(2016);
+////        data.setHours(22);
+////        data.setMinutes(44);
+//
+//
+//        String timeOutYear = (
+//                Integer.valueOf(year.format(endTime.getTime()))-
+//                Integer.valueOf(year.format(currentTime.getTime()))
+//        )+"";
+//        String timeOutMonth = (
+//                Integer.valueOf(month.format(endTime.getTime()))-
+//                        Integer.valueOf(month.format(currentTime.getTime()))
+//        )+"";
+//        String timeOutDay = (
+//                Integer.valueOf(day.format(endTime.getTime()))-
+//                        Integer.valueOf(day.format(currentTime.getTime()))
+//        )+"";
+//
+//        String timeOutHouse = (
+//                Integer.valueOf(house.format(endTime.getTime()))-
+//                        Integer.valueOf(house.format(currentTime.getTime()))
+//        )+"";
+//        String timeOutMinute = (
+//                Integer.valueOf(minute.format(endTime.getTime()))-
+//                        Integer.valueOf(minute.format(currentTime.getTime()))
+//        )+"";
+
+//        TimeOutAbs t = new TimeOutSimple();
+//        t = new SHouse(t);
+//        t.setTimeOut(Integer.valueOf(timeOutHouse));
+        if(DendTime.getTime()>Dcurrent.getTime()){
+//            Toast.makeText(this, "TimeOut: "+timeOutDay+" Day "+timeOutMonth+" month "+timeOutYear+" year",Toast.LENGTH_LONG).show();
+//
+//            Toast.makeText(this, t.getTimeOut(),Toast.LENGTH_LONG).show();
+//            return timeOutYear+" "+timeOutMonth+" "+timeOutDay+" "+timeOutHouse+" "+timeOutMinute;
+            if ((DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)>0){
+                return  "EndTime: "+(DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)+" Day";
+            }
+            else if ((DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)>0){
+                return  "EndTime: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)+" Hr";
+            }
+            else {
+                return  "EndTime: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 1000)+" Min";
+            }
+        }
+        else {
+//            Toast.makeText(this, "TimeOut", Toast.LENGTH_LONG).show();
+            return "TimeOut";
+        }
     }
     public void picassoLoader(Context context, ImageView imageView, String url){
         Log.d("PICASSO", "loading image");
