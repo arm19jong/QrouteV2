@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -54,7 +56,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Created by jongzazaal on 3/11/2559.
  */
 
-public class ReadActivity  extends Activity implements ZXingScannerView.ResultHandler{
+public class ReadActivity  extends Activity implements ZXingScannerView.ResultHandler , ConnectivityReceiver.ConnectivityReceiverListener{
 
     private ZXingScannerView mScannerView;
     private Button gallery;
@@ -69,6 +71,7 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.read_qr);
+        checkConnection();
 
 
 //        Dexter.initialize(ReadActivity.this);
@@ -128,6 +131,7 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
         super.onResume();
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
+        MyApplication.getInstance().setConnectivityListener(this);
     }
 
     @Override
@@ -267,6 +271,35 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
                 mScannerView.resumeCameraPreview(ReadActivity.this);
             }
         }, 2000);
+    }
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    private void showSnack(boolean isConnected) {
+        String message;
+        int color;
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+        } else {
+            message = "Sorry! Not connected to internet";
+            color = Color.RED;
+        }
+
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.coordinator_layout), message, Snackbar.LENGTH_LONG);
+
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(color);
+        snackbar.show();
     }
 
     private static class CustomViewFinderView extends ViewFinderView {
