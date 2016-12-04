@@ -78,7 +78,6 @@ public class Content extends AppCompatActivity {
         place = (TextView) findViewById(R.id.place);
 
 
-
         imageView = (ImageView) findViewById(R.id.image_id);
 
         //Picasso.with(ScrollingActivity.this).load("https://c1.staticflickr.com/9/8452/7936998300_6ab78565ff_b.jpg").into(imageView);
@@ -196,9 +195,6 @@ public class Content extends AppCompatActivity {
         });
 
 
-
-
-
     }
     public String getCurrentTimeStamp() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
@@ -294,9 +290,9 @@ public class Content extends AppCompatActivity {
         Log.d("PICASSO", "loading image");
         Picasso.with(context)
                 .load(url)
-                //.resize(30,30)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher)
+//                .resize(10,10)
+                .placeholder(R.drawable.ic_hourglass_empty_24dp)
+                .error(R.drawable.ic_hourglass_empty_24dp)
                 .into(imageView);
     }
 

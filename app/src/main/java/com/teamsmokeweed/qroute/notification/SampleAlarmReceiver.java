@@ -38,6 +38,7 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
         SampleSchedulingService.sqr = intent.getStringArrayExtra("sqr");
         SampleSchedulingService.title = intent.getStringArrayExtra("sqr")[2];
         SampleSchedulingService.placeName = intent.getStringArrayExtra("sqr")[3];
+        SampleSchedulingService.dayStart = intent.getStringArrayExtra("sqr")[8];
         Intent service = new Intent(context, SampleSchedulingService.class);
 
         startWakefulService(context, service);
@@ -74,7 +75,9 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 //        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() +
 //                5 * 1000, pendingIntent);
 
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, (calendar.getTimeInMillis()-System.currentTimeMillis())+ SystemClock.elapsedRealtime(), pendingIntent);
+//        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, (calendar.getTimeInMillis()-System.currentTimeMillis())+ SystemClock.elapsedRealtime(), pendingIntent);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
         ComponentName receiver = new ComponentName(context, SampleBootReceiver.class);
         PackageManager packageManager = context.getPackageManager();

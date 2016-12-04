@@ -50,6 +50,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_24dp"
         app:layout_behavior="com.teamsmokeweed.qroute.ScrollAwareFABBehavior"
+        app:backgroundTint="#E91E63"
 
         app:layout_anchor="@id/my_recycler_view"
         app:layout_anchorGravity="bottom|right|end" />

@@ -22,6 +22,7 @@ public class SampleSchedulingService extends IntentService {
     public static String[] sqr;
     public static String title;
     public static String placeName;
+    public static String dayStart;
     @Override
     protected void onHandleIntent(Intent intent) {
 //        Intent i = Intent.getIntent()
@@ -48,8 +49,8 @@ public class SampleSchedulingService extends IntentService {
                 .setContentTitle(title)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                .setContentText(placeName);
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(placeName+"\n Even Start: "+dayStart))
+                .setContentText(placeName+"\n Even Start: "+dayStart);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());

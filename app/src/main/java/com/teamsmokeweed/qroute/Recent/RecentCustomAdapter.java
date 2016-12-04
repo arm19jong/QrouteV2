@@ -146,6 +146,8 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
 
         sampleAlarmReceiver.setAlarm(context);
 
+        viewHolder.titles.setText(centeridValue.getTitles());
+
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
         // Drag From Left
