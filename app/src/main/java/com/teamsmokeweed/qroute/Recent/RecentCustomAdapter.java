@@ -19,8 +19,13 @@ import com.teamsmokeweed.qroute.Content;
 import com.teamsmokeweed.qroute.R;
 import com.teamsmokeweed.qroute.firebase.CenteridValue;
 import com.teamsmokeweed.qroute.firebase.DellDatabase;
+import com.teamsmokeweed.qroute.notification.DataSetNoti;
+import com.teamsmokeweed.qroute.notification.SampleAlarmReceiver;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -56,7 +61,7 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         RelativeLayout tvDel;
         public SwipeLayout swipeLayout;
         public ImageView picView;
-        public TextView titles;
+        public TextView titles, textDay, textMonth;
         CardView cardView;
 
         public ViewHolder(View v) {
@@ -67,6 +72,8 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
             tvDel = (RelativeLayout) v.findViewById(R.id.Del);
             picView = (ImageView) v.findViewById(R.id.picView);
             titles = (TextView) v.findViewById(R.id.titles);
+            textDay = (TextView) v.findViewById(R.id.day);
+            textMonth = (TextView) v.findViewById(R.id.month);
             itemView.setTag(itemView);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
         }
@@ -97,6 +104,48 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         // - replace the contents of the view with that element
         final CenteridValue centeridValue = mDataSet.get(position);
         final String mobileID = mMobileID.get(position);
+
+//        String day = centeridValue.getStart_date();
+        String[] date = centeridValue.getStart_date().split("-");
+        String[] time = centeridValue.getStart_time().split(":");
+
+        int day = Integer.parseInt(date[2]);
+        int month = Integer.parseInt(date[1]);
+        int year = Integer.parseInt(date[0]);
+        int hour = Integer.parseInt(time[0]);
+        int minute = Integer.parseInt(time[1]);
+//        String hour = centeridValue.getStart_date();
+//        DataSetNoti dataSetNoti = new DataSetNoti(1,2,3);
+
+//        Toast.makeText(context, ""+day+"/"+month+"/"+year, Toast.LENGTH_SHORT).show();
+        final List<String> sqr = Arrays.asList(
+                centeridValue.getLat().toString(),
+                centeridValue.getLng().toString(),
+                centeridValue.getTitles(),
+                centeridValue.getPlaceName(),
+                centeridValue.getPlaceType(),
+                centeridValue.getDes(),
+                centeridValue.getWeb(),
+                centeridValue.getPic(),
+                centeridValue.getStart_date(),
+                centeridValue.getStart_time(),
+                centeridValue.getEnd_date(),
+                centeridValue.getEnd_time()
+        );
+
+        DataSetNoti.getInstance().SetDateTime(day, month, year, hour, minute, position, (String[]) sqr.toArray(new String[sqr.size()]));
+        SampleAlarmReceiver sampleAlarmReceiver = new SampleAlarmReceiver();
+        SampleAlarmReceiver.timeMillis = DataSetNoti.getInstance().getTimeInMillis();
+        SampleAlarmReceiver.position = DataSetNoti.getInstance().getPosition();
+
+
+
+//        String[] sqrr = (String[]) sqr.toArray(new String[sqr.size()]);
+
+
+
+        sampleAlarmReceiver.setAlarm(context);
+
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
         // Drag From Left
@@ -110,25 +159,40 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> sqr = Arrays.asList(
-                        centeridValue.getLat().toString(),
-                        centeridValue.getLng().toString(),
-                        centeridValue.getTitles(),
-                        centeridValue.getPlaceName(),
-                        centeridValue.getPlaceType(),
-                        centeridValue.getDes(),
-                        centeridValue.getWeb(),
-                        centeridValue.getPic(),
-                        centeridValue.getStart_date(),
-                        centeridValue.getStart_time(),
-                        centeridValue.getEnd_date(),
-                        centeridValue.getEnd_time()
-                );
+//                List<String> sqr = Arrays.asList(
+//                        centeridValue.getLat().toString(),
+//                        centeridValue.getLng().toString(),
+//                        centeridValue.getTitles(),
+//                        centeridValue.getPlaceName(),
+//                        centeridValue.getPlaceType(),
+//                        centeridValue.getDes(),
+//                        centeridValue.getWeb(),
+//                        centeridValue.getPic(),
+//                        centeridValue.getStart_date(),
+//                        centeridValue.getStart_time(),
+//                        centeridValue.getEnd_date(),
+//                        centeridValue.getEnd_time()
+//                );
                 startResultActivity(context, sqr);
             }
         });
 
-        viewHolder.titles.setText(centeridValue.getTitles());
+        Calendar startTime = Calendar.getInstance();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            startTime.setTime(sdf.parse(centeridValue.getStart_date()));// all done
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+        String sDay = dayFormat.format(startTime.getTime());
+        String sMonth = monthFormat.format(startTime.getTime());
+        viewHolder.textDay.setText(sDay);
+        viewHolder.textMonth.setText(sMonth);
+
         Picasso.with(context)
                 .load(centeridValue.getPic())
                 //.resize(30,30)
@@ -201,6 +265,10 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         intent.putExtra("sQr", sqrr);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    private void PrePareDate(){
+
     }
 
 }

@@ -3,12 +3,14 @@ package com.teamsmokeweed.qroute;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +33,7 @@ import java.util.Locale;
 
 public class Content extends AppCompatActivity {
     ImageView imageView;
-    TextView textView, des, web, titles, timeOut, startStop;
+    TextView textView, des, web, titles, timeOut, startStop, place;
     View decorView;
     String[] sQr;
     @Override
@@ -73,6 +75,7 @@ public class Content extends AppCompatActivity {
         web = (TextView) findViewById(R.id.web);
         titles = (TextView) findViewById(R.id.titles);
         startStop = (TextView) findViewById(R.id.startStop);
+        place = (TextView) findViewById(R.id.place);
 
 
 
@@ -91,24 +94,53 @@ public class Content extends AppCompatActivity {
         des.setText(sQr[5]);
         web.setText(sQr[6]);
         titles.setText(sQr[2]);
+        place.setText(sQr[3]+"("+sQr[4]+")");
         try {
             startStop.setText(startStop(sQr[8]+" "+sQr[9], sQr[10]+" "+sQr[11]));
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        final String url = web.getText().toString();
+        web.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strUrl = url;
+//                Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(surl));
+//                Content.this.startActivity(intent);
+                if (!strUrl.startsWith("http://") && !strUrl.startsWith("https://")){
+                    strUrl= "http://" + strUrl;
+                }
+
+
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(strUrl)));
+            }
+        });
 
 
         try {
             String ss = checkTime(sQr[10]+ " "+ sQr[11], getCurrentTimeStamp());
-            final Dialog dialog = new Dialog(Content.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_show_date);
-            dialog.setCancelable(true);
-            timeOut = (TextView) dialog.findViewById(R.id.timeOut);
+//            final Dialog dialog = new Dialog(Content.this);
+//            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//            dialog.setContentView(R.layout.dialog_show_date);
+//            dialog.setCancelable(true);
+//            timeOut = (TextView) dialog.findViewById(R.id.timeOut);
+//
+//            timeOut.setText(ss);
+//
+//
+//            dialog.show();
 
-            timeOut.setText(ss);
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(Content.this);
+            builder.setMessage(ss);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
 
-            dialog.show();
+                }
+            });
+
+            builder.show();
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -244,18 +276,18 @@ public class Content extends AppCompatActivity {
 //            Toast.makeText(this, t.getTimeOut(),Toast.LENGTH_LONG).show();
 //            return timeOutYear+" "+timeOutMonth+" "+timeOutDay+" "+timeOutHouse+" "+timeOutMinute;
             if ((DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)>0){
-                return  "EndTime: "+(DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)+" Day";
+                return  "Event to end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)+" Day";
             }
             else if ((DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)>0){
-                return  "EndTime: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)+" Hr";
+                return  "Event to end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)+" Hr";
             }
             else {
-                return  "EndTime: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 1000)+" Min";
+                return  "Event to end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 1000)+" Min";
             }
         }
         else {
 //            Toast.makeText(this, "TimeOut", Toast.LENGTH_LONG).show();
-            return "TimeOut";
+            return "Event End";
         }
     }
     public void picassoLoader(Context context, ImageView imageView, String url){

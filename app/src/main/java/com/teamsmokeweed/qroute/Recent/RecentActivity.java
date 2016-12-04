@@ -25,6 +25,7 @@ import com.teamsmokeweed.qroute.R;
 import com.teamsmokeweed.qroute.firebase.CenteridValue;
 import com.teamsmokeweed.qroute.firebase.GenUID;
 import com.teamsmokeweed.qroute.firebase.MIDClass;
+import com.teamsmokeweed.qroute.notification.SampleAlarmReceiver;
 import com.teamsmokeweed.qroute.readqr.ReadActivity;
 
 import java.text.SimpleDateFormat;
@@ -285,9 +286,10 @@ public class RecentActivity extends AppCompatActivity {
         ((RecentCustomAdapter) mAdapter).setMode(Attributes.Mode.Single);
         mRecyclerView.setAdapter(mAdapter);
         //mRecyclerView.addOnItemTouchListener(
-        if(swipeRefreshLayout.isRefreshing())
+        if(swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
 
+        }
         //mRecyclerView=null;
     }
 

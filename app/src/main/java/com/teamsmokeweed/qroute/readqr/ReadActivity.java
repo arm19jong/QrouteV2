@@ -100,16 +100,16 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
 
 
         gallery = (Button) findViewById(R.id.gallery);
-//        gallery.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(
-//                        Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//
-//                startActivityForResult(i, RESULT_LOAD_IMAGE);
-//            }
-//        });
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         mScannerView = new ZXingScannerView(this){@Override
         protected IViewFinder createViewFinderView(Context context) {
@@ -371,11 +371,12 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
             e.printStackTrace();
         }
         //String text = result.getText();
-        prefs = getSharedPreferences("CheckFirst", MODE_PRIVATE);
-        String MID = prefs.getString("MID", "-null");
-
-        new SaveToMobileID(result.getText(), MID);
-        Toast.makeText(this, result.getText(), Toast.LENGTH_SHORT).show();
+//        prefs = getSharedPreferences("CheckFirst", MODE_PRIVATE);
+//        String MID = prefs.getString("MID", "-null");
+//
+//        new SaveToMobileID(result.getText(), MID);
+//        Toast.makeText(this, result.getText(), Toast.LENGTH_SHORT).show();
+        handleResult(result);
 
 //        String[] sQr = text.split("#420#");
 //        //String part1 = parts[0];
