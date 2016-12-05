@@ -168,6 +168,38 @@
                             />
                     </RelativeLayout>
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        >
+                        <com.tomerrosenfeld.customanalogclockview.CustomAnalogClock
+                            android:id="@+id/analog_clock"
+
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="#88000000"
+                            />
+                        <TextView
+                            android:id="@+id/analog_clock_text"
+                            android:layout_width="56dp"
+                            android:layout_height="24dp"
+                            android:background="#88000000"
+                            android:text="A.M."
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="#fff"
+
+                            />
+
+                    </LinearLayout>
+
+
+
 
 
                 </RelativeLayout>

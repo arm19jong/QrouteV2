@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:design:24.1.1'
     compile 'me.dm7.barcodescanner:zxing:1.9'
     compile 'com.google.firebase:firebase-database:9.8.0'
+    compile 'com.tomerrosenfeld.customanalogclockview:custom-analog-clock-view:1.01'
     testCompile 'org.testng:testng:6.9.6'
 }
 apply plugin: 'com.google.gms.google-services'

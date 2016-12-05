@@ -21,6 +21,7 @@ import com.teamsmokeweed.qroute.firebase.CenteridValue;
 import com.teamsmokeweed.qroute.firebase.DellDatabase;
 import com.teamsmokeweed.qroute.notification.DataSetNoti;
 import com.teamsmokeweed.qroute.notification.SampleAlarmReceiver;
+import com.tomerrosenfeld.customanalogclockview.CustomAnalogClock;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,8 +62,9 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         RelativeLayout tvDel;
         public SwipeLayout swipeLayout;
         public ImageView picView;
-        public TextView titles, textDay, textMonth;
+        public TextView titles, textDay, textMonth, analogClockText;
         CardView cardView;
+        CustomAnalogClock customAnalogClock;
 
         public ViewHolder(View v) {
             super(v);
@@ -74,8 +76,11 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
             titles = (TextView) v.findViewById(R.id.titles);
             textDay = (TextView) v.findViewById(R.id.day);
             textMonth = (TextView) v.findViewById(R.id.month);
+            customAnalogClock = (CustomAnalogClock) v.findViewById(R.id.analog_clock);
+            analogClockText = (TextView) v.findViewById(R.id.analog_clock_text);
             itemView.setTag(itemView);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
+
         }
 
     }
@@ -145,7 +150,21 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
 
 
         sampleAlarmReceiver.setAlarm(context);
+//        customAnalogClock.setAutoUpdate(false);
+//        customAnalogClock.setTime(calendar);
 
+        viewHolder.customAnalogClock.setAutoUpdate(false);
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+        c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+        viewHolder.customAnalogClock.setTime(c);
+
+        String ampm = "P.M.";
+        if (Integer.parseInt(time[0])<=11){
+            ampm = "A.M.";
+        }
+
+        viewHolder.analogClockText.setText(ampm);
         viewHolder.titles.setText(centeridValue.getTitles());
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
