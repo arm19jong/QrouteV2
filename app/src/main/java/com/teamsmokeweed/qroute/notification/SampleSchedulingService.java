@@ -49,8 +49,8 @@ public class SampleSchedulingService extends IntentService {
                 .setContentTitle(title)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(placeName+"\n Even Start: "+dayStart))
-                .setContentText(placeName+"\n Even Start: "+dayStart);
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(placeName+"\n Even begin tomorrow"))
+                .setContentText(placeName+"\n Even begin tomorrow");
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());

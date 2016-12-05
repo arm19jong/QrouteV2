@@ -197,7 +197,7 @@ public class ReadActivity  extends Activity implements ZXingScannerView.ResultHa
                 //Log.d("sassssssssssssss", dataSnapshot.get.toString()+"//sss");
 //                Toast.makeText(ReadActivity.this, dataSnapshot.getKey()+"//"+rawResult.getText(), Toast.LENGTH_SHORT).show();
                 if(dataSnapshot.getKey().equals(rawResult.getText())){
-                    Toast.makeText(ReadActivity.this, dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ReadActivity.this, dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
                     centeridValue = dataSnapshot.getValue(CenteridValue.class);
 
                     sqr = Arrays.asList(

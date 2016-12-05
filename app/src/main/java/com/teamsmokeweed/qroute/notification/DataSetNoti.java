@@ -25,9 +25,11 @@ public class DataSetNoti {
     }
 
     public void SetDateTime(int day, int month, int year, int hour, int min, int position, String[] sqr) {
-        this.day = day;
-        this.hour = hour;
-        this.min = min;
+        this.day = day-1;
+//        this.hour = hour;
+        this.hour = 12;
+//        this.min = min;
+        this.min = 0;
         //0->JANUARY
         this.month = month-1;
         this.position = position;

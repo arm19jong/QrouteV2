@@ -128,17 +128,26 @@ public class Content extends AppCompatActivity {
 //
 //
 //            dialog.show();
+            TextView timeOut = (TextView) findViewById(R.id.timeOut);
+            if (!ss.equals("Event End")){
+                timeOut.setVisibility(View.GONE);
 
-            AlertDialog.Builder builder =
-                    new AlertDialog.Builder(Content.this);
-            builder.setMessage(ss);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(Content.this);
+                builder.setMessage(ss);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
 
-                }
-            });
+                    }
+                });
 
-            builder.show();
+                builder.show();
+            }
+            else{
+                timeOut.setVisibility(View.VISIBLE);
+            }
+
+
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -272,13 +281,13 @@ public class Content extends AppCompatActivity {
 //            Toast.makeText(this, t.getTimeOut(),Toast.LENGTH_LONG).show();
 //            return timeOutYear+" "+timeOutMonth+" "+timeOutDay+" "+timeOutHouse+" "+timeOutMinute;
             if ((DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)>0){
-                return  "Event to end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)+" Day";
+                return  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)+" Days";
             }
             else if ((DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)>0){
-                return  "Event to end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)+" Hr";
+                return  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)+" Hrs";
             }
             else {
-                return  "Event to end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 1000)+" Min";
+                return  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 1000)+" Mins";
             }
         }
         else {
