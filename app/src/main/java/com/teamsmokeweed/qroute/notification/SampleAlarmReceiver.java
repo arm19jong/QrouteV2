@@ -90,10 +90,17 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 
     public void cancelAlarm(Context context){
         if (alarmManager!=null){
+
             Intent intent = new Intent(context, SampleAlarmReceiver.class);
-            pendingIntent = PendingIntent.getBroadcast(context, position, intent, 0);
-            alarmManager.cancel(pendingIntent);
+//            pendingIntent = PendingIntent.getBroadcast(context, position, intent, 0);
+//            alarmManager.cancel(pendingIntent);
+            for (int i = 0; i<=30; i++) {
+                pendingIntent = PendingIntent.getBroadcast(context, i, intent, 0);
+                alarmManager.cancel(pendingIntent);
+            }
+//            Toast.makeText(context, "Canceiiiiiiiii", Toast.LENGTH_SHORT).show();
         }
+//        Toast.makeText(context, "cccccccc", Toast.LENGTH_SHORT).show();
 
         ComponentName receiver = new ComponentName(context, SampleBootReceiver.class);
         PackageManager packageManager = context.getPackageManager();

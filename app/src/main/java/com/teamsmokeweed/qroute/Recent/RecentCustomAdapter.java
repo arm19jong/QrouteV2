@@ -38,6 +38,8 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
     private List<CenteridValue> mDataSet;
     private List<String> mMobileID;
     private String mid;
+    RecyclerView.Adapter adapter;
+    SampleAlarmReceiver sampleAlarmReceiver = new SampleAlarmReceiver();
 
 
     public void clearData() {
@@ -93,6 +95,17 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
 
     }
 
+    public void swap(List<CenteridValue> mDataSetL){
+        if (mDataSet != null) {
+            mDataSet.clear();
+            mDataSet=mDataSetL;
+        }
+        else {
+            mDataSet=mDataSetL;
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecentCustomAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
@@ -139,7 +152,7 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         );
 
         DataSetNoti.getInstance().SetDateTime(day, month, year, hour, minute, position, (String[]) sqr.toArray(new String[sqr.size()]));
-        SampleAlarmReceiver sampleAlarmReceiver = new SampleAlarmReceiver();
+//        SampleAlarmReceiver sampleAlarmReceiver = new SampleAlarmReceiver();
         SampleAlarmReceiver.timeMillis = DataSetNoti.getInstance().getTimeInMillis();
         SampleAlarmReceiver.position = DataSetNoti.getInstance().getPosition();
 
@@ -229,6 +242,12 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
                 mMobileID.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mDataSet.size());
+//                SampleAlarmReceiver sampleAlarmReceiver1 = new SampleAlarmReceiver();
+                sampleAlarmReceiver.cancelAlarm(context);
+//                adapter = RecentCustomAdapter.this;
+//                adapter.notifyDataSetChanged();
+//                swap(mDataSet);
+
 
             }
         });
@@ -288,8 +307,6 @@ public class RecentCustomAdapter extends RecyclerSwipeAdapter<RecentCustomAdapte
         context.startActivity(intent);
     }
 
-    private void PrePareDate(){
 
-    }
 
 }

@@ -117,7 +117,7 @@ public class Content extends AppCompatActivity {
 
 
         try {
-            String ss = checkTime(sQr[10]+ " "+ sQr[11], getCurrentTimeStamp());
+            String ss = checkTime(sQr[10]+ " "+ sQr[11], getCurrentTimeStamp(),sQr[8]+ " "+ sQr[9]);
 //            final Dialog dialog = new Dialog(Content.this);
 //            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //            dialog.setContentView(R.layout.dialog_show_date);
@@ -224,15 +224,18 @@ public class Content extends AppCompatActivity {
         String s = myFormat.format(startTime.getTime());
         return myFormat.format(startTime.getTime())+"-\n"+myFormat.format(stopTime.getTime());
     }
-    static String  checkTime(String sEndTime, String sCurrentTime) throws ParseException {
+     public String  checkTime(String sEndTime, String sCurrentTime, String sStartTime) throws ParseException {
         Calendar currentTime = Calendar.getInstance();
         Calendar endTime = Calendar.getInstance();
+         Calendar startTime = Calendar.getInstance();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         endTime.setTime(sdf.parse(sEndTime));// all done
+          startTime.setTime(sdf.parse(sStartTime));// all done
         currentTime.setTime(sdf.parse(sCurrentTime));
         Date Dcurrent = currentTime.getTime();
         Date DendTime = endTime.getTime();
+         Date DstartTime = startTime.getTime();
 
 //        SimpleDateFormat year = new SimpleDateFormat("yyyy");
 //        SimpleDateFormat month = new SimpleDateFormat("MM");
@@ -275,23 +278,32 @@ public class Content extends AppCompatActivity {
 //        TimeOutAbs t = new TimeOutSimple();
 //        t = new SHouse(t);
 //        t.setTimeOut(Integer.valueOf(timeOutHouse));
+         String sEvent;
         if(DendTime.getTime()>Dcurrent.getTime()){
 //            Toast.makeText(this, "TimeOut: "+timeOutDay+" Day "+timeOutMonth+" month "+timeOutYear+" year",Toast.LENGTH_LONG).show();
 //
 //            Toast.makeText(this, t.getTimeOut(),Toast.LENGTH_LONG).show();
 //            return timeOutYear+" "+timeOutMonth+" "+timeOutDay+" "+timeOutHouse+" "+timeOutMinute;
+
             if ((DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)>0){
-                return  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)+" Days";
+                sEvent=  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (24 * 60 * 60 * 1000L)+" Days";
             }
             else if ((DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)>0){
-                return  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)+" Hrs";
+                sEvent=  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 60 * 1000)+" Hrs";
             }
             else {
-                return  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 1000)+" Mins";
+                sEvent=  "Event end in: "+(DendTime.getTime() - Dcurrent.getTime()) / (60 * 1000)+" Mins";
             }
+            if(Dcurrent.getTime()>DstartTime.getTime()){
+                return sEvent+"(Even started)" ;
+            }
+            else {
+                return  sEvent+"(Even not start)";
+            }
+
         }
         else {
-//            Toast.makeText(this, "TimeOut", Toast.LENGTH_LONG).show();
+            Toast.makeText(Content.this, "TimeOut", Toast.LENGTH_LONG).show();
             return "Event End";
         }
     }

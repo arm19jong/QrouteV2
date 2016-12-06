@@ -170,7 +170,8 @@ public class RecentActivity extends AppCompatActivity {
         }
 
     }
-    public void initializeRecyclerView(){
+
+    public  void initializeRecyclerView(){
         mFirebaseDatabase = mFirebaseInstance.getReference("mobileid");
         mFirebaseDatabase.addChildEventListener(new ChildEventListener() {
             @Override
